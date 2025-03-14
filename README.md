@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PDF Editor
 
-## Getting Started
+## 📌 Project Overview
+This project is a **PDF editor** built with **React, TypeScript, Next.js, and Fabric.js**. It allows users to upload PDFs, annotate them with highlights, underlines, comments, and signatures, and export the annotated PDF.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Setup and Running Instructions
+
+### Prerequisites
+Make sure you have **Node.js (v16 or later)** and **npm/yarn** installed.
+
+### 1️⃣ Clone the repository
+```sh
+git clone
+cd pdf-editor
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Install dependencies
+```sh
+yarn install  # or npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3️⃣ Run the development server
+```sh
+yarn dev  # or npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application will be available at **http://localhost:3000**.
 
-## Learn More
+### 4️⃣ Build for production
+```sh
+yarn build && yarn start  # or npm run build && npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Libraries & Tools Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📜 PDF Handling
+```sh
+react-pdf          # Rendering PDFs in React
+pdfjs-dist         # Handles PDF rendering internally
+```
 
-## Deploy on Vercel
+### 🎨 Annotation & Drawing
+```sh
+fabric.js          # Enables annotations (highlights, underlines, signatures)
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 💾 File Handling
+```sh
+react-dropzone     # Drag-and-drop PDF file uploads
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🖼 Exporting PDF
+```sh
+html2canvas       # Captures annotations as an image
+jspdf             # Converts annotations into a PDF file
+```
+
+### 🎬 Animations & UI
+```sh
+framer-motion    # Smooth animations and transitions
+tailwindcss      # Utility-first styling framework
+```
+
+---
+
+## ⚠️ Challenges & Solutions
+
+### 1️⃣ **Annotations Not Updating Properly**
+**Issue**: The Fabric.js canvas was not updating when new annotations were added.
+```ts
+canvas.renderAll(); // Ensure the canvas updates
+```
+
+### 2️⃣ **PDF Export Not Capturing Annotations**
+**Issue**: `html2canvas` was not capturing annotations correctly.
+```ts
+const canvas = await html2canvas(element, {
+  scale: 2, // Higher quality
+  useCORS: true, // Fix cross-origin issues
+  backgroundColor: "#ffffff"
+});
+```
+
+### 3️⃣ **Signature Tool Not Working**
+**Issue**: The signature tool was not drawing on the PDF.
+```ts
+canvas.isDrawingMode = true;
+canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+canvas.freeDrawingBrush.color = "#000000";
+canvas.freeDrawingBrush.width = 2;
+```
+
+### 4️⃣ **Mobile Responsiveness**
+**Issue**: The canvas was not resizing properly on mobile.
+```ts
+window.addEventListener("resize", () => {
+  canvas.setDimensions({
+    width: pdfContainerRef.current.offsetWidth,
+    height: pdfContainerRef.current.offsetHeight
+  });
+  canvas.renderAll();
+});
+```
+
+---
+
+## ✨ Features to Add with More Time
+
+```sh
+- Multi-page annotation support  # Allow users to annotate multiple pages
+- Undo/Redo functionality        # Let users revert annotation actions
+- Save and reload annotations    # Store annotations for later
+- Collaborative annotation       # Multi-user real-time annotation
+```
+
+---
+

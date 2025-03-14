@@ -11,6 +11,8 @@
   "dependencies": {
     "fabric": "^6.6.1",
     "framer-motion": "^12.5.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.0",
     "next": "15.2.2",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.8.69",
