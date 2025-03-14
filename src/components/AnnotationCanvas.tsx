@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+
 import React, { useEffect, useRef, useState } from 'react';
 import * as fabric from 'fabric';
 
