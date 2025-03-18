@@ -6,6 +6,7 @@ export default function ExportButton({ pdfContainerRef }: { pdfContainerRef: Rea
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {
+    console.log(!pdfContainerRef.current);
     if (!pdfContainerRef.current) return;
     
     try {
