@@ -1,3 +1,4 @@
+import { handleLoadError, handlePageChange, handleZoomIn, handleZoomOut } from "@/utils";
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
@@ -27,36 +28,18 @@ export default function PDFViewer({
     setIsLoadingComplete(true);
   };
 
-  const handleLoadError = (error: Error) => {
-    console.error("Error loading PDF:", error);
-  };
-
-  const handleZoomIn = () => {
-    setScale((prevScale) => Math.min(prevScale + 0.2, 2.5));
-  };
-
-  const handleZoomOut = () => {
-    setScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
-  };
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= numPages) {
-      setCurrentPage(newPage);
-    }
-  };
-
   const toggleViewMode = () => {
     setViewMode(viewMode === "single" ? "all" : "single");
   };
 
   return (
-    <div ref={pdfContainerRef} className="relative w-full h-[80vh] bg-white p-4 overflow-y-auto">
+    <div className="relative w-full h-[80vh] bg-white p-4 overflow-y-auto">
       {/* PDF Controls */}
       {isLoadingComplete && (
         <div className="sticky top-0 z-30 flex flex-wrap justify-between items-center mb-4 p-2 bg-white bg-opacity-90 border-b border-gray-200 rounded-t-lg shadow-sm">
           <div className="flex items-center space-x-2 mb-2 sm:mb-0">
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
+              onClick={() => handlePageChange(currentPage - 1, setCurrentPage, numPages)}
               disabled={currentPage <= 1 || viewMode === "all"}
               className="p-1 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 hover:bg-gray-100"
               title="Previous Page"
@@ -69,7 +52,7 @@ export default function PDFViewer({
               {viewMode === "all" ? "All Pages" : `Page ${currentPage} of ${numPages}`}
             </span>
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
+              onClick={() => handlePageChange(currentPage + 1, setCurrentPage, numPages)}
               disabled={currentPage >= numPages || viewMode === "all"}
               className="p-1 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 hover:bg-gray-100"
               title="Next Page"
@@ -82,7 +65,7 @@ export default function PDFViewer({
           
           <div className="flex items-center space-x-1.5">
             <button
-              onClick={handleZoomOut}
+              onClick={() => handleZoomOut(setScale)}
               className="p-1 rounded-md text-gray-700 hover:bg-gray-100 cursor-pointer hover:scale-85"
               title="Zoom Out"
             >
@@ -92,7 +75,7 @@ export default function PDFViewer({
             </button>
             <span className="text-sm text-gray-400">{Math.round(scale * 100)}%</span>
             <button
-              onClick={handleZoomIn}
+              onClick={() => handleZoomIn(setScale)}
               className="p-1 rounded-md text-gray-700 hover:bg-gray-100 cursor-pointer hover:scale-85"
               title="Zoom In"
             >
@@ -114,7 +97,9 @@ export default function PDFViewer({
       )}
 
       {/* PDF Document */}
-      <div  className=" flex justify-center bg-amber-200 p-2 z-30">
+
+      <div  className="w-full h-full relative flex justify-center bg-amber-200 p-2 overflow-y-auto">
+        <div ref={pdfContainerRef} className="max-w-[620px] w-full h-full relative flex z-10 justify-center bg-green-300 overflow-y-scroll">
         <Document 
           file={pdfFile} 
           onLoadSuccess={handleLoadSuccess}
@@ -130,6 +115,7 @@ export default function PDFViewer({
                   scale={scale}
                   className="mx-auto"
                   renderTextLayer={true}
+                  
                   renderAnnotationLayer={true}
                 />
               </div>
@@ -147,6 +133,7 @@ export default function PDFViewer({
             </div>
           )}
         </Document>
+        </div>
       </div>
       </div>
         );
