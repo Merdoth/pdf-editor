@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 const pacifico = Pacifico({
   variable: "--font-pacifico",
   weight: ["400"],
+  subsets: ["latin"],
   display: "swap",
 });
 
